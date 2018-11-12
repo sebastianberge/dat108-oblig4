@@ -1,5 +1,7 @@
 package no.hvl.dat108;
 
+import java.util.PriorityQueue;
+
 class Graph {
     PriorityQueue<Vertex> vertexes;
 
@@ -11,7 +13,7 @@ class Graph {
         return vertexes.peek();
     }
 
-    public addVertex(Vertex v) {
-        vertexes.addVertex(v);
+    public void addVertex(Vertex v) {
+        vertexes.add(v);
     }
 }
