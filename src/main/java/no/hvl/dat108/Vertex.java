@@ -1,53 +1,152 @@
 package no.hvl.dat108;
-import java.util.Comparator;
-import java.util.HashSet;
 
-public class Vertex implements Comparator<Vertex> {
-    HashSet<Vertex> edges;
-    private String name;
-    
-    public Vertex() {
-        edges = new HashSet<Vertex>();
+import java.util.*;
+
+public class Vertex<T extends Comparable<T>> implements Comparable<Vertex<T>> {
+
+    private T value = null;
+    private int weight = 0;
+    private List<Edge<T>> edges = new ArrayList<Edge<T>>();
+
+    public Vertex(T value) {
+        this.value = value;
     }
 
-    public Vertex(String name) {
-        this.name = name;
-        edges = new HashSet<Vertex>();
+    public Vertex(T value, int weight) {
+        this(value);
+        this.weight = weight;
     }
 
-    public int compare(Vertex v1, Vertex v2) {
-        return Integer.compare(v1.edges.size(), v2.edges.size());
+    /** Kopier kanter sammen med verdi og vekting **/
+    public Vertex(Vertex<T> vertex) {
+        this(vertex.value, vertex.weight);
+
+        this.edges.addAll(vertex.edges);
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(String.format("Vertex %s with %d edges%s", this.name, edges.size(), (edges.size()==0) ? "\n" : ":\n"));
-        for(Vertex v : edges) {
-            if(!v.edges.contains(this)) {
-                builder.append(String.format("Unidirectional from %s to %s \n", this.name, v.name));
-            }
-            else {
-            builder.append(String.format("From %s to %s \n", this.name, v.name));
-            }
+    public T getValue() {
+        return value;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public void addEdge(Edge<T> e) {
+        edges.add(e);
+    }
+
+    public List<Edge<T>> getEdges() {
+        return edges;
+    }
+
+    public Edge<T> getEdge(Vertex<T> v) {
+        for (Edge<T> e : edges) {
+            if (e.getToVertex().equals(v))
+                return e;
         }
-        return builder.toString();
+        return null;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public boolean hasUniEdges() {
-        for(Vertex v : edges) {
-            if(this.edges.contains(v) && v.edges.contains(this)) {
+    public boolean pathTo(Vertex<T> v) {
+        for (Edge<T> e : edges) {
+            if (e.getToVertex().equals(v))
                 return true;
-            }
         }
         return false;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        final int code = this.value.hashCode() + this.weight + this.edges.size();
+        return 31 * code;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object v1) {
+        if (!(v1 instanceof Vertex))
+            return false;
+
+        final Vertex<T> v = (Vertex<T>) v1;
+
+        final boolean weightEquals = this.weight == v.weight;
+        if (!weightEquals)
+            return false;
+
+        final boolean edgesSizeEquals = this.edges.size() == v.edges.size();
+        if (!edgesSizeEquals)
+            return false;
+
+        final boolean valuesEquals = this.value.equals(v.value);
+        if (!valuesEquals)
+            return false;
+
+        final Iterator<Edge<T>> iter1 = this.edges.iterator();
+        final Iterator<Edge<T>> iter2 = v.edges.iterator();
+        while (iter1.hasNext() && iter2.hasNext()) {
+            // Only checking the cost
+            final Edge<T> e1 = iter1.next();
+            final Edge<T> e2 = iter2.next();
+            if (e1.getCost() != e2.getCost())
+                return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int compareTo(Vertex<T> v) {
+        final int valueComp = this.value.compareTo(v.value);
+        if (valueComp != 0)
+            return valueComp;
+
+        if (this.weight < v.weight)
+            return -1;
+        if (this.weight > v.weight)
+            return 1;
+
+        if (this.edges.size() < v.edges.size())
+            return -1;
+        if (this.edges.size() > v.edges.size())
+            return 1;
+
+        final Iterator<Edge<T>> iter1 = this.edges.iterator();
+        final Iterator<Edge<T>> iter2 = v.edges.iterator();
+        while (iter1.hasNext() && iter2.hasNext()) {
+            // Only checking the cost
+            final Edge<T> e1 = iter1.next();
+            final Edge<T> e2 = iter2.next();
+            if (e1.getCost() < e2.getCost())
+                return -1;
+            if (e1.getCost() > e2.getCost())
+                return 1;
+        }
+
+        return 0;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("Verdi=").append(value).append(" vekting=").append(weight).append("\n");
+        for (Edge<T> e : edges)
+            builder.append("\t").append(e.toString());
+        return builder.toString();
     }
 }
