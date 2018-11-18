@@ -5,16 +5,22 @@
 *Forklar hvilke type problemer som problemklassene P, NP og NPC inneholder.*
 
 P inneholder alle problemer som er lett både å løse og verifisere løsningen.
+Et problem P har en løsning som har en deterministisk polynomiell tid. Dette gjør at å finne løsningen og å verifisere at den er riktig kan være effektiv.
 
 NP er et supersett av P som inneholder problemer som er vanskelig å regne ut. F.eks. sudoku, og også mange krypteringsfunksjoner som brukes i hverdagen.
+NP problem kan ikke løses løses på samme måte som P, men kan løses ved å bruke en ikke-determinisktisk polynomiell tids algoritme. Algoritmen som sjekker om svaret er rett kan ha detereministisk polynomiell tid.
 
-NPC eller NP-complete er...
+
+NPC er hvor problemet x er NP og ethvert problem i NP kan bli redusert eller omformet til problemet x. Det gjør at x vil være NP - komplett. Alle problemer i NP kan bli omformet til et problem i NPC, og hvis du løser ett problem i NPC løser du alle problemene.
+
+
 
 ## 2b)
 
 *Forklar hva som menes med en n-tilnærmingsalgoritme?*
 
-En tilnærmingsalgoritme er en algoritme som anslår med en viss nøyaktighet, løsningen på et NP-problem. Disse algoritmene er effektive og har en nøyaktigheten kan bevises.
+En n-tilnærmingsalgoritme prøver å løse np problemer i polynomiell tid med med løsninger som er tilnærmet det optimale svaret. Vanligvis så bruker løsningen å være uttrykt i en tilnærmingsfaktor eller tilnærmingsledd som det optimale svaret skal være innenfor.
+
 
 ## 2c)
 
@@ -24,17 +30,29 @@ En tilnærmingsalgoritme er en algoritme som anslår med en viss nøyaktighet, l
 
 *Hva er den korteste sykelen i grafen under?*
 
-Den kortesete sykelen er a-b-c.
+Den korteste sykelen til grafen under er:
+<a,c>:1, <c,b>:2, <b,e>:2, <e,f>:1, <f,d>:4, <d,a>:3
+med total lengde 13.
 
 ### ii)
 
 *Hvilken sykel gir algoritmen som resultat dersom du starter i f?*
 
-Ved start i f returnerer algoritmen sekvensen f-e-b-a-c-d.
+Sykelen som algoritmen får som resultat er:
+<f,e>:1, <e,b>:2, <b,a>:1, <a,c>:1, <c,d>:8, <d,f>:
+med total lengde 17. 
+
+
+
 
 ### iii)
 
 *Hva sier dette om ordenen n til tilnærmingsalgoritmen?*
+
+Disse resultatene gir oss tilnærmingsrate: max(17/13,13/17) = 1.3
+Dette betyr at algoritmen vil ha et max avik faktor n med minimum 1.3.
+
+
 
 
 
